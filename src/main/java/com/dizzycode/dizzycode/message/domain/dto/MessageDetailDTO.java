@@ -1,5 +1,7 @@
 package com.dizzycode.dizzycode.message.domain.dto;
 
+import com.dizzycode.dizzycode.message.domain.DirectMessage;
+import com.dizzycode.dizzycode.message.domain.RoomMessage;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -14,5 +16,25 @@ public class MessageDetailDTO {
     private String senderUsername;
     private String content;
     private List<String> url;
-    private LocalDateTime timestamp; // 메시지 생성 시간 추가
+    private LocalDateTime timestamp;
+
+    public static MessageDetailDTO from(RoomMessage message) {
+        MessageDetailDTO dto = new MessageDetailDTO();
+        dto.messageId = message.getId();
+        dto.senderUsername = message.getMemberUsername();
+        dto.content = message.getContent();
+        dto.url = message.getUrl();
+        dto.timestamp = message.getCreatedAt();
+        return dto;
+    }
+
+    public static MessageDetailDTO from(DirectMessage message) {
+        MessageDetailDTO dto = new MessageDetailDTO();
+        dto.messageId = message.getId();
+        dto.senderUsername = message.getMemberUsername();
+        dto.content = message.getContent();
+        dto.url = message.getUrl();
+        dto.timestamp = message.getCreatedAt();
+        return dto;
+    }
 }
