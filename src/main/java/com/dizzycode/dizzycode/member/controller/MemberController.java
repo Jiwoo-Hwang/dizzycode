@@ -5,6 +5,7 @@ import com.dizzycode.dizzycode.member.domain.MemberSignup;
 import com.dizzycode.dizzycode.room.domain.room.RoomMemberStatusDTO;
 import com.dizzycode.dizzycode.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,7 +17,7 @@ public class MemberController {
     private final MemberService memberService;
 
     @PostMapping("/signup")
-    public ResponseEntity<MemberCreateResponse> signUp(@RequestBody MemberSignup memberSignup) {
+    public ResponseEntity<MemberCreateResponse> signUp(@Valid @RequestBody MemberSignup memberSignup) {
 
         return new ResponseEntity<>(MemberCreateResponse.from(memberService.signUp(memberSignup)), HttpStatus.OK);
     }

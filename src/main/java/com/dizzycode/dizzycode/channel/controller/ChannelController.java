@@ -3,6 +3,7 @@ package com.dizzycode.dizzycode.channel.controller;
 import com.dizzycode.dizzycode.channel.domain.dto.ChannelCreateDTO;
 import com.dizzycode.dizzycode.channel.domain.dto.ChannelDetailDTO;
 import com.dizzycode.dizzycode.channel.service.ChannelService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +18,7 @@ public class ChannelController {
     private final ChannelService channelService;
 
     @PostMapping("/rooms/{roomId}/categories/{categoryId}/channels")
-    public ResponseEntity<ChannelDetailDTO> createChannel(@RequestBody ChannelCreateDTO channelCreateDTO, @PathVariable Long categoryId) {
+    public ResponseEntity<ChannelDetailDTO> createChannel(@Valid @RequestBody ChannelCreateDTO channelCreateDTO, @PathVariable Long categoryId) {
 
         return new ResponseEntity<>(channelService.createChannel(categoryId, channelCreateDTO), HttpStatus.CREATED);
     }

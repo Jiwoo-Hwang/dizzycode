@@ -4,6 +4,7 @@ import com.dizzycode.dizzycode.member.domain.MemberStatus;
 import com.dizzycode.dizzycode.room.domain.room.DMRoomCreateDTO;
 import com.dizzycode.dizzycode.room.domain.room.DMRoomDetailDTO;
 import com.dizzycode.dizzycode.message.service.DirectMessageRoomService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -20,7 +21,7 @@ public class DMRoomController {
     private final DirectMessageRoomService directMessageRoomService;
 
     @PostMapping("/direct/rooms")
-    public ResponseEntity<DMRoomDetailDTO> createDMRoom(@RequestBody DMRoomCreateDTO dmRoomCreateDTO) {
+    public ResponseEntity<DMRoomDetailDTO> createDMRoom(@Valid @RequestBody DMRoomCreateDTO dmRoomCreateDTO) {
         return new ResponseEntity<>(directMessageRoomService.createDMRoom(dmRoomCreateDTO), HttpStatus.CREATED);
     }
 

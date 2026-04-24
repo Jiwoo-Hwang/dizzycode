@@ -47,6 +47,8 @@ dependencies {
 
     implementation 'io.openvidu:openvidu-java-client:2.30.0'
 
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+
     compileOnly 'org.projectlombok:lombok'
     runtimeOnly 'com.mysql:mysql-connector-j'
 

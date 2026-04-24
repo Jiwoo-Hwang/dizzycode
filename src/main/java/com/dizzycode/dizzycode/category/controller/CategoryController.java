@@ -5,6 +5,7 @@ import com.dizzycode.dizzycode.category.domain.dto.CategoryDetailDTO;
 import com.dizzycode.dizzycode.category.domain.dto.CategoryPostResponseDTO;
 import com.dizzycode.dizzycode.category.service.CategoryService;
 import com.dizzycode.dizzycode.room.exception.NoRoomException;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +19,7 @@ public class CategoryController {
     private final CategoryService categoryService;
 
     @PostMapping("/rooms/{roomId}/categories")
-    public ResponseEntity<CategoryPostResponseDTO> createCategory(@RequestBody CategoryCreateDTO categoryCreateDTO, @PathVariable Long roomId) throws NoRoomException {
+    public ResponseEntity<CategoryPostResponseDTO> createCategory(@Valid @RequestBody CategoryCreateDTO categoryCreateDTO, @PathVariable Long roomId) throws NoRoomException {
 
         return new ResponseEntity<>(categoryService.createCategory(roomId, categoryCreateDTO), HttpStatus.CREATED);
     }
