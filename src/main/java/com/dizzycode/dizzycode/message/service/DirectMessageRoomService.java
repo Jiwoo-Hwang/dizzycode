@@ -11,7 +11,7 @@ import com.dizzycode.dizzycode.room.domain.room.DMRoomDetailDTO;
 import com.dizzycode.dizzycode.message.infrastructure.DirectMessageRoomRepository;
 import com.dizzycode.dizzycode.message.infrastructure.DirectRoomMemberRepository;
 import com.dizzycode.dizzycode.member.infrastructure.MemberJpaRepository;
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisCallback;
