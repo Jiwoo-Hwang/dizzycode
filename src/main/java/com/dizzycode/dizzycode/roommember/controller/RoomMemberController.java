@@ -16,7 +16,7 @@ public class RoomMemberController {
     private final RoomMemberService roomMemberService;
 
     @PostMapping("/rooms/{roomId}/in")
-    public ResponseEntity<RoomMemberDetailDTO> roomIn(@PathVariable Long roomId) throws ClassNotFoundException {
+    public ResponseEntity<RoomMemberDetailDTO> roomIn(@PathVariable Long roomId) {
 
         return new ResponseEntity<>(roomMemberService.roomIn(roomId), HttpStatus.OK);
     }

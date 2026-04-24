@@ -1,6 +1,7 @@
 package com.dizzycode.dizzycode.message.service;
 
 import com.dizzycode.dizzycode.member.exception.NoMemberException;
+import com.dizzycode.dizzycode.roommember.exception.RoomMemberNotFoundException;
 import com.dizzycode.dizzycode.member.infrastructure.MemberEntity;
 import com.dizzycode.dizzycode.message.domain.RoomMessage;
 import com.dizzycode.dizzycode.roommember.infrastructure.RoomMemberEntity;
@@ -33,11 +34,12 @@ public class MessageService {
         RoomMessage roomMessage = new RoomMessage();
 
         // 로그인한 사용자 확인
-        Optional<MemberEntity> member = memberJpaRepository.findById(messageCreateDTO.getSenderId());
+        MemberEntity member = memberJpaRepository.findById(messageCreateDTO.getSenderId())
+                .orElseThrow(() -> new NoMemberException("존재하지 않는 회원입니다."));
 
         // 메시지 생성
-        roomMessage.setMemberId(member.orElseThrow().getId());
-        roomMessage.setMemberUsername(member.orElseThrow().getUsername());
+        roomMessage.setMemberId(member.getId());
+        roomMessage.setMemberUsername(member.getUsername());
         roomMessage.setRoomId(roomId);
         roomMessage.setCategoryId(categoryId);
         roomMessage.setChannelId(channelId);
@@ -47,15 +49,7 @@ public class MessageService {
 
         log.info("messageId={}", newRoomMessage.getId());
 
-        // 메시지 디테일 반환 dto
-        MessageDetailDTO messageDetailDTO = new MessageDetailDTO();
-        messageDetailDTO.setMessageId(newRoomMessage.getId());
-        messageDetailDTO.setUrl(newRoomMessage.getUrl());
-        messageDetailDTO.setContent(newRoomMessage.getContent());
-        messageDetailDTO.setSenderUsername(member.orElseThrow().getUsername());
-        messageDetailDTO.setTimestamp(newRoomMessage.getCreatedAt());
-
-        return messageDetailDTO;
+        return MessageDetailDTO.from(newRoomMessage);
     }
 
     public List<MessageDetailDTO> messageList(Long channelId, LocalDateTime last, Long roomId) {
@@ -63,19 +57,9 @@ public class MessageService {
         RoomMemberIdEntity roomMemberIdEntity = new RoomMemberIdEntity(memberEntity.getId(), roomId);
         Optional<RoomMemberEntity> roomMember = roomMemberJpaRepository.findById(roomMemberIdEntity);
 
-        List<MessageDetailDTO> messageList= messageRepository.findMessages(channelId, last, roomMember.orElseThrow().getCreatedAt()).stream()
-                .map(roomMessage -> {
-                    MessageDetailDTO messageDetailDTO = new MessageDetailDTO();
-                    messageDetailDTO.setMessageId(roomMessage.getId());
-                    messageDetailDTO.setSenderUsername(roomMessage.getMemberUsername());
-                    messageDetailDTO.setContent(roomMessage.getContent());
-                    messageDetailDTO.setTimestamp(roomMessage.getCreatedAt());
-
-                    return messageDetailDTO;
-                })
+        return messageRepository.findMessages(channelId, last, roomMember.orElseThrow(() -> new RoomMemberNotFoundException("방 멤버 정보가 존재하지 않습니다.")).getCreatedAt()).stream()
+                .map(MessageDetailDTO::from)
                 .collect(Collectors.toList());
-
-        return messageList;
     }
 
     private MemberEntity getMemberFromSession() {

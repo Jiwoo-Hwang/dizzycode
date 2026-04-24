@@ -2,6 +2,7 @@ package com.dizzycode.dizzycode.roommember.infrastructure;
 
 import com.dizzycode.dizzycode.member.domain.Member;
 import com.dizzycode.dizzycode.member.exception.NoMemberException;
+import com.dizzycode.dizzycode.roommember.exception.RoomMemberNotFoundException;
 import com.dizzycode.dizzycode.member.infrastructure.MemberEntity;
 import com.dizzycode.dizzycode.member.infrastructure.MemberJpaRepository;
 import com.dizzycode.dizzycode.room.domain.Room;
@@ -53,9 +54,9 @@ public class RoomMemberRepositoryImpl implements RoomMemberRepository {
     }
 
     @Override
-    public RoomMember save(Long roomId) throws ClassNotFoundException {
+    public RoomMember save(Long roomId) {
         MemberEntity member = getMemberFromSession();
-        RoomEntity room = roomJpaRepository.findByRoomId(roomId).orElseThrow(() -> new ClassNotFoundException("방이 존재하지 않습니다."));
+        RoomEntity room = roomJpaRepository.findByRoomId(roomId).orElseThrow(() -> new RoomMemberNotFoundException("방이 존재하지 않습니다."));
         RoomMemberIdEntity roomMemberId = new RoomMemberIdEntity(member.getId(), room.getRoomId());
         RoomMemberEntity roomMember = new RoomMemberEntity();
         roomMember.setRoomMemberId(roomMemberId);

@@ -13,6 +13,6 @@ public interface RoomMemberRepository {
     List<Room> findRoomsByMemberId();
     List<Member> findMembersByRoomId(Long roomId);
     Optional<RoomMember> findRoomMemberByRoomMemberId(Long roomId);
-    RoomMember save(Long roomId) throws ClassNotFoundException;
+    RoomMember save(Long roomId);
     void delete(RoomMember roomMember);
 }

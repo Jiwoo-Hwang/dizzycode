@@ -12,8 +12,8 @@ public interface FriendshipRepository {
     Optional<Friendship> findFriendshipById(Long memberId1, Long memberId2);
     Friendship saveByUsername(Long senderId, String username);
     Friendship saveById(Long senderId, Long receiverId);
-    Friendship accept(Long memberId1, Long memberId2) throws ClassNotFoundException;
-    Friendship reject(Long memberId1, Long memberId2) throws ClassNotFoundException;
+    Friendship accept(Long memberId1, Long memberId2);
+    Friendship reject(Long memberId1, Long memberId2);
     void delete(Friendship friendship);
     Boolean existsById(FriendshipId friendshipId);
 }

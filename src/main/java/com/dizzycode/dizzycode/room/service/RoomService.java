@@ -13,6 +13,7 @@ import com.dizzycode.dizzycode.room.domain.room.RoomCreateWithCCDTO;
 import com.dizzycode.dizzycode.room.domain.room.RoomDetailDTO;
 import com.dizzycode.dizzycode.room.domain.room.RoomRemoveDTO;
 import com.dizzycode.dizzycode.room.service.port.RoomRepository;
+import com.dizzycode.dizzycode.roommember.exception.RoomMemberNotFoundException;
 import com.dizzycode.dizzycode.roommember.service.port.RoomMemberRepository;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
@@ -52,14 +53,7 @@ public class RoomService {
     @Transactional
     public List<RoomDetailDTO> list() {
         List<RoomDetailDTO> rooms = roomMemberRepository.findRoomsByMemberId().stream()
-                .map(room -> {
-                    RoomDetailDTO roomDetailDTO = new RoomDetailDTO();
-                    roomDetailDTO.setRoomId(room.getRoomId());
-                    roomDetailDTO.setRoomName(room.getRoomName());
-                    roomDetailDTO.setOpen(room.isOpen());
-
-                    return roomDetailDTO;
-                })
+                .map(RoomDetailDTO::from)
                 .collect(Collectors.toList());
 
         return rooms;
@@ -68,14 +62,7 @@ public class RoomService {
     @Transactional
     public List<RoomDetailDTO> findAll() {
         List<RoomDetailDTO> rooms = roomRepository.findRoomsByOpenIs(true).stream()
-                .map(room -> {
-                    RoomDetailDTO roomDetailDTO = new RoomDetailDTO();
-                    roomDetailDTO.setRoomId(room.getRoomId());
-                    roomDetailDTO.setRoomName(room.getRoomName());
-                    roomDetailDTO.setOpen(room.isOpen());
-
-                    return roomDetailDTO;
-                })
+                .map(RoomDetailDTO::from)
                 .collect(Collectors.toList());
 
         return rooms;
@@ -84,12 +71,7 @@ public class RoomService {
     @Transactional
     public RoomDetailDTO roomRetrieve(Long roomId) {
         Room room = roomRepository.findByRoomId(roomId).orElseThrow(() -> new NoRoomException("방이 존재하지 않습니다."));
-        RoomDetailDTO roomDetailDTO = new RoomDetailDTO();
-        roomDetailDTO.setRoomId(roomId);
-        roomDetailDTO.setRoomName(room.getRoomName());
-        roomDetailDTO.setOpen(room.isOpen());
-
-        return roomDetailDTO;
+        return RoomDetailDTO.from(room);
     }
 
     @Transactional
@@ -104,7 +86,7 @@ public class RoomService {
     // 방 나가기
     @Transactional
     public boolean out(Long roomId) {
-        RoomMember roomMember = roomMemberRepository.findRoomMemberByRoomMemberId(roomId).orElseThrow();
+        RoomMember roomMember = roomMemberRepository.findRoomMemberByRoomMemberId(roomId).orElseThrow(() -> new RoomMemberNotFoundException("방 멤버 정보가 존재하지 않습니다."));
         roomMemberRepository.delete(roomMember);
 
         return true;

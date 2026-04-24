@@ -7,6 +7,7 @@ import com.dizzycode.dizzycode.room.domain.room.RoomCreateWithCCDTO;
 import com.dizzycode.dizzycode.room.domain.room.RoomDetailDTO;
 import com.dizzycode.dizzycode.room.domain.room.RoomRemoveDTO;
 import com.dizzycode.dizzycode.room.service.RoomService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -23,7 +24,7 @@ public class RoomController {
     private final RoomService roomService;
 
     @PostMapping("/rooms")
-    public ResponseEntity<RoomCreateWithCCDTO> createRoom(@RequestBody RoomCreateDTO roomCreateDTO) {
+    public ResponseEntity<RoomCreateWithCCDTO> createRoom(@Valid @RequestBody RoomCreateDTO roomCreateDTO) {
 
         return new ResponseEntity<>(roomService.createRoom(roomCreateDTO), HttpStatus.CREATED);
     }
@@ -41,13 +42,13 @@ public class RoomController {
     }
 
     @GetMapping("/rooms/{roomId}")
-    public ResponseEntity<RoomDetailDTO> roomRetrieve(@PathVariable Long roomId) throws ClassNotFoundException {
+    public ResponseEntity<RoomDetailDTO> roomRetrieve(@PathVariable Long roomId) {
 
         return new ResponseEntity<>(roomService.roomRetrieve(roomId), HttpStatus.OK);
     }
 
     @DeleteMapping("/rooms/{roomId}")
-    public ResponseEntity<RoomRemoveDTO> roomRemove(@PathVariable Long roomId) throws ClassNotFoundException {
+    public ResponseEntity<RoomRemoveDTO> roomRemove(@PathVariable Long roomId) {
 
         return new ResponseEntity<>(roomService.roomRemove(roomId), HttpStatus.NO_CONTENT);
     }

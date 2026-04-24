@@ -4,6 +4,7 @@ import com.dizzycode.dizzycode.friendship.domain.Friendship;
 import com.dizzycode.dizzycode.friendship.domain.FriendshipId;
 import com.dizzycode.dizzycode.friendship.domain.FriendshipStatus;
 import com.dizzycode.dizzycode.friendship.exception.FriendshipAlreadyExistsException;
+import com.dizzycode.dizzycode.friendship.exception.FriendshipNotFoundException;
 import com.dizzycode.dizzycode.friendship.exception.InvalidFriendshipRequestException;
 import com.dizzycode.dizzycode.friendship.service.port.FriendshipRepository;
 import com.dizzycode.dizzycode.member.exception.NoMemberException;
@@ -88,16 +89,16 @@ public class FriendshipRepositoryImpl implements FriendshipRepository {
     }
 
     @Override
-    public Friendship accept(Long memberId1, Long memberId2) throws ClassNotFoundException {
-        FriendshipEntity friendship = friendshipJpaRepository.findFriendshipById(memberId1, memberId2).orElseThrow(() -> new ClassNotFoundException("친구 관계가 존재하지 않습니다."));
+    public Friendship accept(Long memberId1, Long memberId2) {
+        FriendshipEntity friendship = friendshipJpaRepository.findFriendshipById(memberId1, memberId2).orElseThrow(() -> new FriendshipNotFoundException("친구 관계가 존재하지 않습니다."));
         friendship.setStatus(FriendshipStatus.ACCEPTED);
 
         return friendshipJpaRepository.save(friendship).toModel();
     }
 
     @Override
-    public Friendship reject(Long memberId1, Long memberId2) throws ClassNotFoundException {
-        FriendshipEntity friendship = friendshipJpaRepository.findFriendshipById(memberId1, memberId2).orElseThrow(() -> new ClassNotFoundException("친구 관계가 존재하지 않습니다."));
+    public Friendship reject(Long memberId1, Long memberId2) {
+        FriendshipEntity friendship = friendshipJpaRepository.findFriendshipById(memberId1, memberId2).orElseThrow(() -> new FriendshipNotFoundException("친구 관계가 존재하지 않습니다."));
         friendship.setStatus(FriendshipStatus.REJECTED);
 
         return friendshipJpaRepository.save(friendship).toModel();

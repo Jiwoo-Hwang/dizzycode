@@ -2,6 +2,7 @@ package com.dizzycode.dizzycode.friendship.service;
 
 import com.dizzycode.dizzycode.friendship.domain.Friendship;
 import com.dizzycode.dizzycode.friendship.domain.FriendshipStatus;
+import com.dizzycode.dizzycode.friendship.exception.FriendshipNotFoundException;
 import com.dizzycode.dizzycode.friendship.service.port.FriendshipRepository;
 import com.dizzycode.dizzycode.member.domain.Member;
 import com.dizzycode.dizzycode.friendship.domain.dto.FriendshipDetailDTO;
@@ -9,7 +10,7 @@ import com.dizzycode.dizzycode.friendship.domain.dto.FriendshipRemoveDTO;
 import com.dizzycode.dizzycode.room.domain.room.DMRoomCreateDTO;
 import com.dizzycode.dizzycode.member.service.port.MemberRepository;
 import com.dizzycode.dizzycode.message.service.DirectMessageRoomService;
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -92,8 +93,8 @@ public class FriendshipService {
 
     @Transactional
     // 친구 삭제
-    public FriendshipRemoveDTO removeFriendship(Long memberId1, Long memberId2) throws ClassNotFoundException {
-        Friendship friendship = friendshipRepository.findFriendshipById(memberId1, memberId2).orElseThrow(() -> new ClassNotFoundException("친구 관계가 존재하지 않습니다."));
+    public FriendshipRemoveDTO removeFriendship(Long memberId1, Long memberId2) {
+        Friendship friendship = friendshipRepository.findFriendshipById(memberId1, memberId2).orElseThrow(() -> new FriendshipNotFoundException("친구 관계가 존재하지 않습니다."));
         friendshipRepository.delete(friendship);
         FriendshipRemoveDTO friendshipRemoveDTO = new FriendshipRemoveDTO();
 
@@ -102,7 +103,7 @@ public class FriendshipService {
 
     // 친구 요청 수락
     @Transactional
-    public FriendshipDetailDTO acceptFriendshipRequest(Long memberId1, Long memberId2) throws ClassNotFoundException {
+    public FriendshipDetailDTO acceptFriendshipRequest(Long memberId1, Long memberId2) {
         Friendship friendship = friendshipRepository.accept(memberId1, memberId2);
         FriendshipDetailDTO friendshipDetail = new FriendshipDetailDTO();
         friendshipDetail.setFriendId(friendship.getMember2().getId());
@@ -122,7 +123,7 @@ public class FriendshipService {
 
     // 친구 요청 거절
     @Transactional
-    public FriendshipDetailDTO rejectFriendshipRequest(Long memberId1, Long memberId2) throws ClassNotFoundException {
+    public FriendshipDetailDTO rejectFriendshipRequest(Long memberId1, Long memberId2) {
         Friendship friendship = friendshipRepository.reject(memberId1, memberId2);
         FriendshipDetailDTO friendshipDetail = new FriendshipDetailDTO();
         friendshipDetail.setFriendId(friendship.getMember2().getId());

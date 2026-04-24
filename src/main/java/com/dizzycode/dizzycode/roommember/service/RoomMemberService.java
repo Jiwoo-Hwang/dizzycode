@@ -19,11 +19,8 @@ public class RoomMemberService {
 
     // 방 입장
     @Transactional
-    public RoomMemberDetailDTO roomIn(Long roomId) throws ClassNotFoundException {
+    public RoomMemberDetailDTO roomIn(Long roomId) {
         RoomMember save = roomMemberRepository.save(roomId);
-        RoomMemberDetailDTO roomMemberDetailDTO = new RoomMemberDetailDTO();
-        roomMemberDetailDTO.setRoomMemberId(save.getRoomMemberId());
-
-        return roomMemberDetailDTO;
+        return RoomMemberDetailDTO.from(save);
     }
 }

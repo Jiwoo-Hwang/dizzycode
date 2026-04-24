@@ -41,19 +41,19 @@ public class FriendshipController {
     }
 
     @PostMapping("/friendship/reject/member1/{memberId1}/member2/{memberId2}")
-    public ResponseEntity<FriendshipDetailDTO> rejectFriendshipRequest(@PathVariable Long memberId1, @PathVariable Long memberId2) throws ClassNotFoundException {
+    public ResponseEntity<FriendshipDetailDTO> rejectFriendshipRequest(@PathVariable Long memberId1, @PathVariable Long memberId2) {
 
         return new ResponseEntity<>(friendshipService.rejectFriendshipRequest(memberId1, memberId2), HttpStatus.OK);
     }
 
     @PostMapping("/friendship/accept/member1/{memberId1}/member2/{memberId2}")
-    public ResponseEntity<FriendshipDetailDTO> acceptFriendshipRequest(@PathVariable Long memberId1, @PathVariable Long memberId2) throws ClassNotFoundException {
+    public ResponseEntity<FriendshipDetailDTO> acceptFriendshipRequest(@PathVariable Long memberId1, @PathVariable Long memberId2) {
 
         return new ResponseEntity<>(friendshipService.acceptFriendshipRequest(memberId1, memberId2), HttpStatus.OK);
     }
 
     @DeleteMapping("/friendship/member1/{memberId1}/member2/{memberId2}")
-    public ResponseEntity<FriendshipRemoveDTO> removeFriendship(@PathVariable Long memberId1, @PathVariable Long memberId2) throws ClassNotFoundException {
+    public ResponseEntity<FriendshipRemoveDTO> removeFriendship(@PathVariable Long memberId1, @PathVariable Long memberId2) {
 
         return new ResponseEntity<>(friendshipService.removeFriendship(memberId1, memberId2), HttpStatus.NO_CONTENT);
     }
