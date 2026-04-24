@@ -18,6 +18,16 @@ public class RabbitMQConfig {
 
     @Value("${spring.rabbitmq.host}")
     private String rabbitmqHost;
+
+    @Value("${spring.rabbitmq.port}")
+    private int rabbitmqPort;
+
+    @Value("${spring.rabbitmq.username}")
+    private String rabbitmqUsername;
+
+    @Value("${spring.rabbitmq.password}")
+    private String rabbitmqPassword;
+
     private static final String CHAT_QUEUE_NAME = "chat.queue";
     private static final String CHAT_EXCHANGE_NAME = "chat.exchange";
     private static final String ROUTING_KEY = "rooms.*";
@@ -55,9 +65,9 @@ public class RabbitMQConfig {
     public ConnectionFactory connectionFactory() {
         CachingConnectionFactory factory = new CachingConnectionFactory();
         factory.setHost(rabbitmqHost);
-        factory.setPort(5672);
-        factory.setUsername("guest");
-        factory.setPassword("guest");
+        factory.setPort(rabbitmqPort);
+        factory.setUsername(rabbitmqUsername);
+        factory.setPassword(rabbitmqPassword);
         return factory;
     }
 

@@ -19,6 +19,19 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     @Value("${spring.rabbitmq.host}")
     private String rabbitmqHost;
+
+    @Value("${spring.rabbitmq.stomp-port}")
+    private int rabbitmqStompPort;
+
+    @Value("${spring.rabbitmq.username}")
+    private String rabbitmqUsername;
+
+    @Value("${spring.rabbitmq.password}")
+    private String rabbitmqPassword;
+
+    @Value("${cors.allowed-origin}")
+    private String corsAllowedOrigin;
+
     private final JWTUtil jwtUtil;
     private final RedisTemplate<String, String> redisTemplate;
 
@@ -26,10 +39,10 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     public void configureMessageBroker(MessageBrokerRegistry config) {
         // Use RabbitMQ as the message broker
         config.enableStompBrokerRelay("/topic")
-                .setRelayHost(rabbitmqHost) // Docker Compose 네트워크에서 RabbitMQ 컨테이너의 이름 사용
-                .setRelayPort(61613)
-                .setClientLogin("guest")
-                .setClientPasscode("guest");
+                .setRelayHost(rabbitmqHost)
+                .setRelayPort(rabbitmqStompPort)
+                .setClientLogin(rabbitmqUsername)
+                .setClientPasscode(rabbitmqPassword);
         config.setApplicationDestinationPrefixes("/app");
         config.setPathMatcher(new AntPathMatcher("."));
     }
@@ -39,7 +52,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
         registry
                 .addEndpoint("/ws/gs-guide-websocket")
                 .addInterceptors(new WebSocketHandshakeInterceptor(jwtUtil, redisTemplate)) // Add interceptor here
-                .setAllowedOrigins("http://localhost:5173")
+                .setAllowedOrigins(corsAllowedOrigin)
                 .withSockJS();
     }
 }
